@@ -1,0 +1,19 @@
+[
+  {
+    "Name": "New Profile",
+    "Projects": [
+      {
+        "Path": "IotHubDeviceSim\\IotHubDeviceSim.csproj",
+        "Action": "Start"
+      },
+      {
+        "Path": "IotHubClientSim\\IotHubClientSim.csproj",
+        "Action": "Start"
+      },
+      {
+        "Path": "IotHubClientConsumerSim\\IotHubClientConsumerSim.csproj",
+        "Action": "Start"
+      }
+    ]
+  }
+]
