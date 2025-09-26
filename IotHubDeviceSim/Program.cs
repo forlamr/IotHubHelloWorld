@@ -7,31 +7,46 @@ namespace IotHubDeviceSim
 {
     internal class Program
     {
+        public enum DeviceAuthType
+        {
+            Sas,
+            SelfSigned
+        }
+
         static async Task Main(string[] args)
         {
             Console.WriteLine("Device Sim");
 
+            DeviceAuthType deviceAuthType = DeviceAuthType.Sas; // Change to SelfSigned to use X.509 certificate authentication
             DeviceClient client = null;
 
-            // Device01 SAS Authentication
-            var deviceConnectionString = "<device01-iothub-connection-string>";
-            client = DeviceClient.CreateFromConnectionString(deviceConnectionString, TransportType.Mqtt);
+            if(deviceAuthType == DeviceAuthType.Sas)
+            {
+                Console.WriteLine("Using SAS authentication");
 
-            //// Device02 Self-signed
-            //var iotHubHostname = "<iothub-host-name>";
-            //var deviceId = "Device02";
-            //var certPath = "device02.pfx";  // device02 certificate path
-            //var certPassword = "";
+                // Device01 SAS Authentication
+                var deviceConnectionString = "<device01-iothub-connection-string>";
+                client = DeviceClient.CreateFromConnectionString(deviceConnectionString, TransportType.Mqtt);
+            }
+            else
+            {
+                Console.WriteLine("Using Self-signed authentication");
 
-            //var certificate = new X509Certificate2(certPath, certPassword);
-            //var auth = new DeviceAuthenticationWithX509Certificate(deviceId, certificate);
+                // Device02 Self-signed
+                var iotHubHostname = "<iothub-host-name>";
+                var deviceId = "Device02";
+                var certPath = "device02.pfx";  // device02 certificate path
+                var certPassword = "";
 
-            //client = DeviceClient.Create(
-            //    iotHubHostname,
-            //    auth,
-            //    TransportType.Mqtt
-            //);
+                var certificate = new X509Certificate2(certPath, certPassword);
+                var auth = new DeviceAuthenticationWithX509Certificate(deviceId, certificate);
 
+                client = DeviceClient.Create(
+                    iotHubHostname,
+                    auth,
+                    TransportType.Mqtt
+                );
+            }
 
             Console.WriteLine("Connection ...");
             await client.OpenAsync();
